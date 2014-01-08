@@ -1,0 +1,12 @@
+{% extends 'flash/base.html' %}
+
+{% block title %}Flash Card home{% endblock %}
+{% block body %}
+
+{% if user.is_authenticated %}
+<h4 class="navbar-text">Welcome, {{ user.username }}!</h4>
+{% else %}
+<h4>Welcome!</h4>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "flash/base.html" %}
+
+{% block title %}
+<p>{{ user.username }}'s Dashboad</p>
+{% endblock %}
+
+{% block body %}
+
+<hr>
+
+{% if cardSetList %}
+<p><a href="/cardset_view/">Card Sets</a></p>
+{% else %}
+<p>You do not have card sets yet.</p>
+{% endif %}
+
+<ul>
+{% for cardSet in cardSetList %}
+<li><a href="/dashboard/{{ cardSet.id }}">{{ cardSet }}</a></li>
+{% endfor %}
+</ul>
+
+{% if selectedCardSet != None %}
+<a href="/add_question/{{ selectedCardSet.id }}">Add a new question in {{ selectedCardSet }}</a> 
+<a href="/test/0/{{ selectedCardSet.id }}/0">Test {{ selectedCardSet.name }}</a>
+{% endif %}
+
+<form method="post" action="/dashboard/{{ selectedCardSet.id }}">
+	{% csrf_token %}
+	<ul>
+	{% for question in questionList %}
+	<li><a href="/edit_question/{{ question.id }}">{{ question.question }}</a>
+	    ({{ question.questionType }})
+	    <input type="checkbox" name="delete" value="{{ question.id }}"/></li>
+	{% endfor %}
+	</ul>
+	<input type="submit" name="submit" value="Delete question(s)" />
+</form>
+
+{% endblock %}

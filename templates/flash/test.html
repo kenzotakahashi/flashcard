@@ -1,0 +1,81 @@
+{% extends "flash/base.html" %}
+
+{% block title %}
+<p>Test</p>
+{% endblock %}
+
+{% block body %}
+
+<hr>
+
+<form method="post" action="/test/{{ testId }}/{{ cardSetId }}/{{ question.pk }}/">
+	{% csrf_token %}
+	<h4>{{ question.question }}</h4>
+
+	{% if question.questionType == "Short answer" %}
+		<p><input type="text" name="answer" value="{{ answerBack }}" size="50" /></p>
+
+	{% elif question.questionType == "Multiple choice" %}
+		<ul>
+		{% if question.choice1 != "" %}
+			<li><input type="radio" name="answer" value="1" checked="" >
+			{{ question.choice1 }}</li>
+		{% endif %}
+		{% if question.choice2 != "" %}
+			<li><input type="radio" name="answer" value="2" {{ checked.1 }} >
+			{{ question.choice2 }}</li>
+		{% endif %}
+		{% if question.choice3 != "" %}
+			<li><input type="radio" name="answer" value="3" {{ checked.2 }} >
+			{{ question.choice3 }}</li>
+		{% endif %}
+		{% if question.choice4 != "" %}
+			<li><input type="radio" name="answer" value="4" {{ checked.3 }} >
+			{{ question.choice4 }}</li>
+		{% endif %}
+		{% if question.choice5 != "" %}
+			<li><input type="radio" name="answer" value="5" {{ checked.4 }} >
+			{{ question.choice5 }}</li>
+		{% endif %}
+		</ul>
+
+	{% elif question.questionType == "All that apply" %}
+		<ul>
+		{% if question.choice1 != "" %}
+			<li><input type="checkbox" name="answer" value="1" {{ checked.0 }} >
+			{{ question.choice1 }}</li>
+		{% endif %}
+		{% if question.choice2 != "" %}
+			<li><input type="checkbox" name="answer" value="2" {{ checked.1 }} >
+			{{ question.choice2 }}</li>
+		{% endif %}
+		{% if question.choice3 != "" %}
+			<li><input type="checkbox" name="answer" value="3" {{ checked.2 }} >
+			{{ question.choice3 }}</li>
+		{% endif %}
+		{% if question.choice4 != "" %}
+			<li><input type="checkbox" name="answer" value="4" {{ checked.3 }} >
+			{{ question.choice4 }}</li>
+		{% endif %}
+		{% if question.choice5 != "" %}
+			<li><input type="checkbox" name="answer" value="5" {{ checked.4 }} >
+			{{ question.choice5 }}</li>
+		{% endif %}
+		</ul>
+	{% endif %}
+<!-- 	<input type="hidden" name="questionId" value="{{ question.pk }}"> -->
+	<input type="submit" name="submit" value="Submit" {{ disabled }}/>
+	{% if message != "Correct!" %}
+	<a href="/test/{{ testId }}/{{ cardSetId }}/{{ question.pk }}/1">View Answer</a>
+	{% endif %}
+	{% if nextQuestion == 1 %}
+	<a href="/test/{{ testId }}/{{ cardSetId }}/{{ question.pk }}/2">Next Question</a>
+	{% else %}
+	<a href="/test/0/{{ cardSetId }}/0/">Start Over</a>
+	{% endif %}
+</form>
+
+<p>{{ message }}</p>
+<p>{{ log }}</p>
+
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'flash/base.html' %}
+
+{% block title %}Edit a Question{% endblock %}
+
+{% block body %}
+  <div class="">
+    <form id="category_form" method="post" action="/edit_question/{{ question.id }}">
+        <p>{{ message }}</p>
+        <p>{{ questionType }}</p>
+
+        {% csrf_token %}
+
+      <p><label>Move this question to:
+      <select name="cardSet">
+      <option value="{{ question.cardSet.name }}">{{ question.cardSet.name }}</option>
+      {% for cardSet in cardSetList %}
+      {% if cardSet.pk != question.cardSet.pk %}
+        <option value="{{ cardSet.name }}">{{ cardSet.name }}</option>
+      {% endif %}
+      {% endfor %}
+      </select></label></p>
+
+      
+      <p>{{ questionForm.question.errors }}</p>
+      <p>{{ questionForm.question.help_text }}</p>
+      <p>{{ questionForm.question }}</p>
+
+      <br>
+
+      <ul>
+        <li>{{ questionForm.isAnswer1 }}{{ questionForm.choice1 }}</li>
+        <li>{{ questionForm.isAnswer2 }}{{ questionForm.choice2 }}</li>
+        <li>{{ questionForm.isAnswer3 }}{{ questionForm.choice3 }}</li>
+        <li>{{ questionForm.isAnswer4 }}{{ questionForm.choice4 }}</li>
+        <li>{{ questionForm.isAnswer5 }}{{ questionForm.choice5 }}</li>
+      </ul>
+        
+      <br>
+
+      <input type="submit" name="submit" value="Edit Question" />
+    </form>
+  </div>
+{% endblock %}

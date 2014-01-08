@@ -1,0 +1,22 @@
+{% extends 'flash/base.html' %}
+
+{% block title %}Edit a Card Set{% endblock %}
+
+{% block body %}
+    <div class="">
+        <form id="category_form" method="post" action="/edit_cardset/{{ cardSet.pk }}">
+            <p>{{ message }}</p>
+
+        	{% csrf_token %}
+        
+    		<p>{{ form.name.errors }}</p>
+    		<p>{{ form.name.help_text }}</p>
+    		<p>{{ form.name }}</p>
+            <p>If checked, this card set will be publicly available</p>
+            <p>{{ form.isPublic }}</p>
+
+            <br>
+        	<input type="submit" name="submit" value="Edit Card Set" />
+        </form>
+    </div>
+{% endblock %}

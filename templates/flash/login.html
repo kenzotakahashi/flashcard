@@ -1,0 +1,26 @@
+{% extends "flash/base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block body %}
+<div class="">
+    <div class="container">
+        <form class="form-signin span4" id="login_form" method="post" action="/login/">
+            <h2 class="form-signin-heading">Please sign in</h2>
+            {% if bad_details %}
+            <p><strong>Your username and/or password were incorrect!</strong></p>
+            {% elif disabled_account %}
+            <p><strong>Your FlashCard account is currently disabled; we can't log you in!</strong></p>
+            {% endif %}
+
+            {% csrf_token %}
+
+        	Username: <input type="text" name="username" value="" size="50" />
+        	<br>
+        	Password: <input type="password" name="password" value="" size="50" />
+        	<br>
+        	<input type="submit" value="submit"/>
+        </form>
+    </div>
+</div>
+{% endblock %}

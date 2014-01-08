@@ -1,0 +1,32 @@
+{% extends 'flash/base.html' %}
+
+{% block title %}Add a Question{% endblock %}
+
+{% block body %}
+  <div class="">
+    <form id="category_form" method="post" action="/add_question/{{ cardset_id }}">
+        <p>{{ message }}</p>
+        <p>{{ questionType }}</p>
+
+      	{% csrf_token %}
+      
+  		<p>{{ questionForm.question.errors }}</p>
+  		<p>{{ questionForm.question.help_text }}</p>
+  		<p>{{ questionForm.question }}</p>
+
+      <br>
+
+      <ul>
+        <li>{{ questionForm.isAnswer1 }}{{ questionForm.choice1 }}</li>
+        <li>{{ questionForm.isAnswer2 }}{{ questionForm.choice2 }}</li>
+        <li>{{ questionForm.isAnswer3 }}{{ questionForm.choice3 }}</li>
+        <li>{{ questionForm.isAnswer4 }}{{ questionForm.choice4 }}</li>
+        <li>{{ questionForm.isAnswer5 }}{{ questionForm.choice5 }}</li>
+      </ul>
+        
+      <br>
+
+    	<input type="submit" name="submit" value="Create Question" />
+    </form>
+  </div>
+{% endblock %}

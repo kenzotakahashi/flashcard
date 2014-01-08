@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Flash Card</title>
+</head>
+<body>
+	<h1>{% block title %}{% endblock %}</h1>
+
+
+
+	<ul>
+	{% if user.is_authenticated %}
+	<li><a href="/logout/">Logout</a></li>
+	{% else %}
+	<li><a href="/register/">Sign Up</a></li>
+	<li><a href="/login/">Login</a></li>
+	{% endif %}
+	</ul>
+
+	<hr>
+
+	<ul class="nav">
+	{% if user.is_authenticated %}
+	<li><a href="/add_cardset/">New Card Set</a></li>
+	<li><a href="/dashboard/">Dashboard</a></li>
+	{% endif %}
+	<li><a href="/">Flash Card Home</a></li>
+	</ul>
+
+	{% block body %}
+	{% endblock %}
+
+	<br>
+	<li><a href="/admin/">Admin</a></li>
+</body>
+</html>
