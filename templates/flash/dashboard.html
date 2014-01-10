@@ -1,40 +1,120 @@
 {% extends "flash/base.html" %}
 
-{% block title %}
-<p>{{ user.username }}'s Dashboad</p>
+{% load static %}
+{% block css %}
+<link href="{% static 'css/offcanvas.css'%} " rel="stylesheet">
 {% endblock %}
 
+
+{% block dashboard %}<li class="active">{% endblock %}
 {% block body %}
 
-<hr>
 
-{% if cardSetList %}
-<p><a href="/cardset_view/">Card Sets</a></p>
-{% else %}
-<p>You do not have card sets yet.</p>
-{% endif %}
+<div class="container">
+  <div class="row row-offcanvas row-offcanvas-right">
 
-<ul>
-{% for cardSet in cardSetList %}
-<li><a href="/dashboard/{{ cardSet.id }}">{{ cardSet }}</a></li>
-{% endfor %}
-</ul>
+    <div class="col-xs-12 col-sm-9">
+      <p class="pull-right visible-xs">
+        <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle nav</button>
+      </p>
+			{% if cardset_id != "0" %}
+			<div class="btn-group">
+				<a class="btn btn-default btn-lg" href="/add_question/{{ cardset_id }}" role="button">
+						Create a new question</a>
+				<a class="btn btn-default btn-lg" href="/dashboard/{{ cardset_id }}/edit/" 
+					 role="button">Edit this card set</a>
+				{% if selectedCardSet.numberOfQuestions > 0 %} 
+					<a class="btn btn-default btn-lg" href="/test/0/{{ cardset_id }}/0/" role="button">Test</a>
+				{% endif %}
+				<!-- <a href="/dashboard/{{ cardset_id }}/delete/">Delete</a> -->
+				<a class="btn btn-default btn-lg" href="/dashboard/{{ cardset_id }}/delete/" role="button">
+					<span class="glyphicon glyphicon-trash"></span>
+				</a>
+			</div>
+			{% endif %}
+			<h1>{{ selectedCardSet.name }}</h1>
+			<!-- <div class="jumbotron"> -->
+			
+				{% if option != "0" %}
+					<p>{{ message }}</p>
+					<p>{{ form.errors }}</p>
+					{% if option == "create" or option == "edit" %}
+						<form class="form-horizontal" method="post" 
+									action="/dashboard/{{ cardset_id }}/create/" role="form">
+							{% csrf_token %}
+						  <div class="form-group">
+						    <label for="cardSetName" class="col-sm-3 control-label">Card set name</label>
+						    <div class="col-sm-9">
+						    	{{ form.name }}
+						      <!-- <input type="text" class="form-control" id="cardSetName" placeholder="Card set name"> -->
+						    </div>
+						  </div>
+						  <div class="form-group">
+						  	<label for="visibleTo" class="col-sm-3 control-label">Visible to</label>
+							  <div class="col-sm-9">
+									<select class="form-control" id="visibleTo" name="visibleTo">
+										{% if selectedCardSet.visibleTo == "pw" %}
+									  	<option value="pw">people with a password...</option>
+									  	<option value="me">just me</option>
+									 		<option value="eo">everyone</option>	
+									  {% elif selectedCardSet.visibleTo == "eo" %}
+									  	<option value="eo">everyone</option>
+									  	<option value="me">just me</option>
+									  	<option value="pw">people with a password...</option>
+									  {% else %}
+											<option value="me">just me</option>
+											<option value="eo">everyone</option>
+									  	<option value="pw">people with a password...</option>
+									 	{% endif %}							  
+									</select>
+								</div>
+						  </div>
+						  <div class="form-group">
+						    <label for="password" class="col-sm-3 control-label">Password</label>
+						    <div class="col-sm-9">
+						      <input type="text" class="form-control" id="password" name="password"
+												 placeholder="Password">
+						    </div>
+						  </div>
+						  <div class="form-group">
+						    <div class="col-sm-offset-3 col-sm-9">
+						      <button class="btn btn-lg btn-primary" type="submit">Submit</button>
+						    </div>
+						  </div>
+						</form>
+						{% endif %}
+					{% endif %} <!-- option != None -->
+			<!-- </div> --> <!-- jumbotron -->
 
-{% if selectedCardSet != None %}
-<a href="/add_question/{{ selectedCardSet.id }}">Add a new question in {{ selectedCardSet }}</a> 
-<a href="/test/0/{{ selectedCardSet.id }}/0">Test {{ selectedCardSet.name }}</a>
-{% endif %}
+			<ul class="list-group">
+			{% for question in questionList %}
+				<a href="/edit_question/{{ question.id }}/" class="list-group-item">
+				{{ question.question }}</a>
+			{% endfor %}
+			</ul>
+    </div><!--/span-->
 
-<form method="post" action="/dashboard/{{ selectedCardSet.id }}">
-	{% csrf_token %}
-	<ul>
-	{% for question in questionList %}
-	<li><a href="/edit_question/{{ question.id }}">{{ question.question }}</a>
-	    ({{ question.questionType }})
-	    <input type="checkbox" name="delete" value="{{ question.id }}"/></li>
-	{% endfor %}
-	</ul>
-	<input type="submit" name="submit" value="Delete question(s)" />
-</form>
+    <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
+			<a class="btn btn-success btn-lg btn-block" href="/dashboard/{{ cardset_id }}/create/" 
+				 role="button">Create a new card set </a> <!-- &raquo; -->
+			<ul class="list-group">
+			{% for cardSet in cardSetList %}
+				{% if cardSet.pk == selectedCardSet.pk %}
+			  	<a href="/dashboard/{{ cardSet.id }}/0/" class="list-group-item active">
+			  {% else %}
+			  	<a href="/dashboard/{{ cardSet.id }}/0/" class="list-group-item">
+			  {% endif %}
+			  <span class="badge">{{ cardSet.numberOfQuestions }}</span>
+			  {{ cardSet }}
+			  </a>
+			{% endfor %}
+			</ul>
+    </div><!--/span-->
+  </div><!--/row-->
+</div><!--/.container-->
 
+
+{% endblock %}
+{% block js %}
+<script src="{% static 'js/offcanvas.js' %}"></script>
 {% endblock %}

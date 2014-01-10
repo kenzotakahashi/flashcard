@@ -1,43 +1,61 @@
 {% extends 'flash/base.html' %}
 
-{% block title %}Edit a Question{% endblock %}
+{% load static %}
+{% block css %}
+<link href="{% static 'css/signin.css'%} " rel="stylesheet">
+<link href="{% static 'css/questionform.css'%} " rel="stylesheet">
+{% endblock %}
 
 {% block body %}
-  <div class="">
-    <form id="category_form" method="post" action="/edit_question/{{ question.id }}">
+  <div class="container">
+    <div class="form-signin">
+      <form id="category_form" method="post" action="/edit_question/{{ question.id }}/">
+        <h2 class="form-signin-heading">Edit a question</h2>
         <p>{{ message }}</p>
         <p>{{ questionType }}</p>
-
         {% csrf_token %}
 
-      <p><label>Move this question to:
-      <select name="cardSet">
-      <option value="{{ question.cardSet.name }}">{{ question.cardSet.name }}</option>
-      {% for cardSet in cardSetList %}
-      {% if cardSet.pk != question.cardSet.pk %}
-        <option value="{{ cardSet.name }}">{{ cardSet.name }}</option>
-      {% endif %}
-      {% endfor %}
-      </select></label></p>
+        <label>Move this question to:
+        <select class="form-control" name="cardSet">
+        <option value="{{ question.cardSet.name }}">{{ question.cardSet.name }}</option>
+        {% for cardSet in cardSetList %}
+        {% if cardSet.pk != question.cardSet.pk %}
+          <option value="{{ cardSet.name }}">{{ cardSet.name }}</option>
+        {% endif %}
+        {% endfor %}
+        </select></label>
 
-      
-      <p>{{ questionForm.question.errors }}</p>
-      <p>{{ questionForm.question.help_text }}</p>
-      <p>{{ questionForm.question }}</p>
-
-      <br>
-
-      <ul>
-        <li>{{ questionForm.isAnswer1 }}{{ questionForm.choice1 }}</li>
-        <li>{{ questionForm.isAnswer2 }}{{ questionForm.choice2 }}</li>
-        <li>{{ questionForm.isAnswer3 }}{{ questionForm.choice3 }}</li>
-        <li>{{ questionForm.isAnswer4 }}{{ questionForm.choice4 }}</li>
-        <li>{{ questionForm.isAnswer5 }}{{ questionForm.choice5 }}</li>
-      </ul>
         
-      <br>
+        <p>{{ questionForm.question.errors }}</p>
+        <p>{{ questionForm.question.help_text }}</p>
+        <p>{{ questionForm.question }}</p>
 
-      <input type="submit" name="submit" value="Edit Question" />
-    </form>
+        <br>
+
+        <div class="input-group">
+          <span class="input-group-addon">{{ questionForm.isAnswer1 }}</span>
+            {{ questionForm.choice1 }}
+        </div>
+        <div class="input-group">
+          <span class="input-group-addon">{{ questionForm.isAnswer2 }}</span>
+            {{ questionForm.choice2 }}
+        </div>
+        <div class="input-group">
+          <span class="input-group-addon">{{ questionForm.isAnswer3 }}</span>
+            {{ questionForm.choice3 }}
+        </div>
+        <div class="input-group">
+          <span class="input-group-addon">{{ questionForm.isAnswer4 }}</span>
+            {{ questionForm.choice4 }}
+        </div>
+        <div class="input-group">
+          <span class="input-group-addon">{{ questionForm.isAnswer5 }}</span>
+            {{ questionForm.choice5 }}
+        </div>
+
+        <br>
+        <button class="btn btn-lg btn-primary btn-block" data-loading-text="Loading..." type="submit">Submit</button>
+      </form>
+    </div>
   </div>
 {% endblock %}

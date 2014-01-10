@@ -1,34 +1,38 @@
 {% extends 'flash/base.html' %}
-
-{% block title %}Sign Up{% endblock %}
+{% load static %}
+{% block css %}
+<link href="{% static 'css/signin.css'%} " rel="stylesheet">
+{% endblock %}
+{% block signUp %}<li class="active">{% endblock %}
 {% block body %}
 
-    <div class="">
-    {% if registered %}
-    <p>Thank you for registering!</p>
-
-    <p><a href="/login/">Login</a> when you are ready.</p>
-    {% else %}
-    <form id="user_form" method="post" action="/register/">
-    	{% csrf_token %}
-        <h2 class="">Sign up Here</h2>
-
-        {% for field in user_form.visible_fields %}
-        {{ field.errors }}
-        {{ field.help_text}}<br>
-        {{ field }}<br>
-        {% endfor %}
-
-        {% for field in profile_form.visible_fields %}
-        {{ field.errors }}
-        {{ field.help_text}}<br>
-        {{ field }}<br>
-        {% endfor %}
-
-        <br>
-    	<input type="submit" name="submit" value="Register" />
-    </form>
-    {% endif %}
-    </div>
-
+<div class="container">
+  {% if registered %}
+  <div class="form-signin">
+  <h4 class="alert alert-success">Thank you for registering!</h4>
+  <a class="btn btn-lg btn-primary btn-block" href="/login/" role="button">Sign in</a>
+  </div>
+  {% else %}
+  <form class="form-signin" role="form" method="post" action="/register/">
+  	{% csrf_token %}
+    <h2 class="form-signin-heading">Sign up</h2>
+    <p>{{ message}}</p>     
+    <h5>User name</h5>
+    {{ userForm.username.errors }}
+    {{ userForm.username }}
+    <h5>Email address</h5>
+    {{ userForm.email.errors }}
+    {{ userForm.email }}
+    <h5>Password</h5>
+    {{ userForm.password.errors }}
+    {{ userForm.password }}
+    <h5>Confirmed email address</h5>
+    <input type="password" class="form-control" name="confirm" 
+            placeholder="Confirmed password" required>
+    <button class="btn btn-lg btn-primary btn-block" data-loading-text="Loading..." type="submit">Sign up</button>
+    <p>Have an Account? <a href="/login/">Sign in</a><p>
+  </form>
+  {% endif %} <!-- registered -->
+</div>
 {% endblock %}
+

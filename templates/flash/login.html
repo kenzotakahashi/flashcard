@@ -1,26 +1,27 @@
 {% extends "flash/base.html" %}
-
-{% block title %}Login{% endblock %}
-
-{% block body %}
-<div class="">
-    <div class="container">
-        <form class="form-signin span4" id="login_form" method="post" action="/login/">
-            <h2 class="form-signin-heading">Please sign in</h2>
-            {% if bad_details %}
-            <p><strong>Your username and/or password were incorrect!</strong></p>
-            {% elif disabled_account %}
-            <p><strong>Your FlashCard account is currently disabled; we can't log you in!</strong></p>
-            {% endif %}
-
-            {% csrf_token %}
-
-        	Username: <input type="text" name="username" value="" size="50" />
-        	<br>
-        	Password: <input type="password" name="password" value="" size="50" />
-        	<br>
-        	<input type="submit" value="submit"/>
-        </form>
-    </div>
-</div>
+{% load static %}
+{% block css %}
+<link href="{% static 'css/signin.css'%} " rel="stylesheet">
 {% endblock %}
+{% block signIn %}<li class="active">{% endblock %}
+{% block body %}
+
+<div class="container">
+  <form class="form-signin" role="form" method="post" action="/login/">
+    {% csrf_token %}
+    <h2 class="form-signin-heading">Please Sign in</h2>
+    {% if error %}
+      <h4 class="alert alert-danger">"Your username and/or password were incorrect!"</h4>
+    {% endif %}
+    <h5>User name</h5>
+  	<input type="text" class="form-control" name="username" value="" size="50" autofocus="True" placeholder="User name" />
+    <h5>Password</h5>
+  	<input type="password" class="form-control" name="password" value="" size="50" placeholder="Password" />
+  	<button class="btn btn-lg btn-primary btn-block" data-loading-text="Loading..." type="submit">Sign in</button>
+    <p>No Account Yet? <a href="/register/">Sign up</a></p>
+  </form>
+</div>
+
+
+{% endblock %}
+

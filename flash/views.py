@@ -5,6 +5,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 
+from random import randint
+
 from flash.models import CardSet, Question, Test
 from flash.forms import UserForm, CardSetForm, QuestionForm
 
@@ -13,9 +15,15 @@ MULTIPLE_CHOICE = 'Multiple choice'
 ALL_THAT_APPLY = 'All that apply'
 
 def index(request):
-	context = RequestContext(request)
+	backgroundList = ["#4CE59C", "#628DDA", "#32C50E", "#EA60F0", "#E75223", "#F0EA60",
+					"#60CDF0", "#FDFD00", "#FD0047", "#039E8B"]
+	background = backgroundList[randint(0, len(backgroundList) -1)]
 
-	return render_to_response('flash/index.html', context)
+	context = RequestContext(request)
+	cardSetList = CardSet.objects.order_by('-created')[:20]
+
+	context_dict = {'cardSetList': cardSetList, 'background': background }
+	return render_to_response('flash/index.html', context_dict, context)
 
 def example(request):
 	context = RequestContext(request)
@@ -26,110 +34,62 @@ def example(request):
 def register(request):
 	context = RequestContext(request)
 	registered = False
+	message = ""
 
 	if request.method == 'POST':
-		user_form = UserForm(data=request.POST)
-		if user_form.is_valid():
-			user = user_form.save()
-			user.set_password(user.password)
-			user.save()
-			registered = True
+		userForm = UserForm(data=request.POST)
+		if userForm.is_valid():
+			user = userForm.save()
+			confirm = request.POST['confirm']
+			if confirm.strip()  == user.password:
+				user.set_password(user.password)
+				user.save()
+				registered = True
+			else:
+				message = "Confirmed password and password have to be the same."
 		else:
-			print user_form.errors
+			print userForm.errors
 	else:
-		user_form = UserForm()
+		userForm = UserForm()
+	if registered:
+		message = "Thanks for registering!"
 	
 	return render_to_response(
 		'flash/register.html',
-		{'user_form': user_form, 'registered': registered},
+		{'userForm': userForm, 'registered': registered, 'message': message},
 		  context)
 
 def userLogin(request):
 	context = RequestContext(request)
-
 	if request.method == 'POST':
 		username = request.POST['username']
 		password = request.POST['password']
-
 		user = authenticate(username=username, password=password)
-
 		if user is not None:
 			if user.is_active:
 				login(request, user)
-				return HttpResponseRedirect('/dashboard/')
+				return HttpResponseRedirect('/dashboard/0/0')
 			else:
 				return HttpResponse("Your FlashCard account is disabled.")
 		else:
-			print "Invalid login details: {0}, {1}".format(username, password)
-			#return HttpResponse("Invalid login details supplied.")
-			return render_to_response(
-				'flash/login.html',
-				{'error': "Invalid login details supplied."},
-				context)
+			return render_to_response('flash/login.html', {'error': True}, context)
 	else:
-		return render_to_response('flash/login.html',
-								 {'error': ""},
-								  context)
+		return render_to_response('flash/login.html', {}, context)
 
 @login_required
 def userLogout(request):
-	print "logout called"
 	logout(request)
 	return HttpResponseRedirect('/')
 
 #####################   Create and Edit    ######################
 
 @login_required
-def addCardSet(request):
-	context = RequestContext(request)
-
-	message = ""
-	if request.method == 'POST':
-		form = CardSetForm(request.POST)
-		if form.is_valid():
-			cardSet = form.save(commit=False)
-			cardSet.user = User.objects.get(username=request.user)
-			cardSet.save()
-			message = "Card Set successfully created."
-			return redirect('/dashboard/' + str(cardSet.id))
-		else:
-			print form.errors
-	else:
-		form = CardSetForm()
-
-	return render_to_response('flash/addCardSet.html',
-							 {'form': form, 'message': message},
-							 context)
-
-@login_required
-def editCardSet(request, cardset_id):
-	context = RequestContext(request)
-	cardSet = CardSet.objects.get(pk=cardset_id)
-
-	message = ""
-	if request.method == 'POST':
-		form = CardSetForm(request.POST, instance=cardSet)
-		if form.is_valid():
-			cardSet.save()
-			message = "Card Set successfully edited."
-		else:
-			print form.errors
-	else:
-		form = CardSetForm(instance=cardSet)
-
-	return render_to_response('flash/editCardSet.html',
-							 {'form': form, 'message': message, 'cardSet': cardSet},
-							 context)
-
-@login_required
 def addQuestion(request, cardset_id):
 	context = RequestContext(request)
-
 	message = ""
 	questionType = ""
 	if request.method == 'POST':
 		questionForm = QuestionForm(request.POST)
-
 		#It the question field is filled out, it is valid.
 		if questionForm.is_valid():
 			question = questionForm.save(commit=False)
@@ -138,10 +98,10 @@ def addQuestion(request, cardset_id):
 				question.questionType = questionType
 				question.cardSet = CardSet.objects.get(pk=cardset_id)
 				question.save()
-
+				question.cardSet.save()
 				#Refresh to new form			
 				questionForm = QuestionForm()
-				message = "Question successfully edited."
+				message = "Question successfully created."
 				questionType = "The questionType is: " + questionType
 			else:
 				questionType = "The Question is invalid"
@@ -149,27 +109,21 @@ def addQuestion(request, cardset_id):
 			print questionForm.errors
 	else:
 		questionForm = QuestionForm()
-		
-	return render_to_response('flash/addQuestion.html',
-							 {'questionForm': questionForm, 
-							  'message': message,
-							  'cardset_id': cardset_id,
-							  'questionType': questionType},
-							   context)
+	
+	context_dict = {'questionForm': questionForm, 'message': message, 
+					'cardset_id': cardset_id, 'questionType': questionType}
+	return render_to_response('flash/addQuestion.html', context_dict, context)
 
 @login_required
 def editQuestion(request, question_id):
 	context = RequestContext(request)
-
-	user = User.objects.get(username=request.user)
 	question = Question.objects.get(pk=question_id)
-	cardSetList = CardSet.objects.filter(user=user)
+	cardSetList = CardSet.objects.filter(user=request.user)
 
 	message = ""
 	questionType = ""
 	if request.method == 'POST':
 		questionForm = QuestionForm(request.POST, instance=question)
-
 		if questionForm.is_valid():
 			question = questionForm.save(commit=False)
 			question, questionType = classifyQuestionType(question)
@@ -178,7 +132,7 @@ def editQuestion(request, question_id):
 				selectedCardSet = request.POST['cardSet']
 				question.cardSet = CardSet.objects.get(name=selectedCardSet)
 				question.save()
-
+				question.cardSet.save()
 				message = "Question successfully edited."
 				questionType = "The questionType is: " + questionType
 			else:
@@ -187,59 +141,88 @@ def editQuestion(request, question_id):
 			print questionForm.errors
 	else:
 		questionForm = QuestionForm(instance=question)
-		
-	return render_to_response('flash/editQuestion.html',
-							 {'questionForm': questionForm, 
-							  'message': message,
-							  'question': question,
-							  'questionType': questionType,
-							  'cardSetList': cardSetList},
-							   context)
+	
+	context_dict = {'questionForm': questionForm, 'message': message, 'question': question,
+					'questionType': questionType, 'cardSetList': cardSetList}
+	return render_to_response('flash/editQuestion.html', context_dict, context)
 
-
-###################      View stuff    ############################
 
 @login_required
-def dashboard(request, cardset_id):
+def dashboard(request, cardset_id, option):
 	context = RequestContext(request)
+	cardSetList = CardSet.objects.filter(user=request.user).order_by('-lastModified')
+	message, form = "", ""
 
-	user = User.objects.get(username=request.user)
-	cardSetList = CardSet.objects.filter(user=user)
 	try:
 		selectedCardSet = CardSet.objects.get(pk=cardset_id)
-		questionList = Question.objects.filter(cardSet=selectedCardSet)
+		questionList = Question.objects.filter(cardSet=selectedCardSet).order_by('-lastModified')
 	except: #DoesNotExist
-		questionList = None
-		selectedCardSet = None
+		# selectedCardSet, questionList = None, None
+		try: #Get the most recent updated cardset	
+			selectedCardSet = CardSet.objects.filter(user=request.user).order_by('-lastModified')[0]
+			questionList = selectedCardSet.question_set.all().order_by('-lastModified')
+			cardset_id = selectedCardSet.pk
+		except:
+			print "You have no card set yet."
+			message = "You have no card set yet."
+			selectedCardSet, questionList = None, None
 
-	if request.method == 'POST':
-		deleteList = request.POST.getlist('delete')
-		for questionId in deleteList:
-			question = Question.objects.get(pk=questionId) 
-			question.delete()
+	if option == "create": #Create a new card set
+		if request.method == 'POST':
+			form = CardSetForm(request.POST)
+			visibleTo = request.POST['visibleTo']
+			password = request.POST['password'].strip()	
+			if form.is_valid():
+				selectedCardSet = form.save(commit=False)
+				if not(visibleTo == "pw" and password == ""):
+					selectedCardSet.user = request.user
+					selectedCardSet.visibleTo = visibleTo
+					selectedCardSet.password = password
+					selectedCardSet.save()
+					cardset_id = selectedCardSet.pk
+					message = "Card Set successfully created."
+					#return redirect('/dashboard/' + str(cardSet.id))
+				else:
+					message = "Password is required."
+			else:
+				print form.errors
+		else:
+			form = CardSetForm()
+			selectedCardSet = None
 
-	return render_to_response('flash/dashboard.html',
-							 {'cardSetList': cardSetList,
-							  'questionList': questionList,
-							  'selectedCardSet': selectedCardSet},
-							 context)
+	elif option == "edit": #Edit a selected card set
+		if request.method == 'POST':
+			form = CardSetForm(request.POST, instance=selectedCardSet)
+			visibleTo = request.POST['visibleTo']
+			password = request.POST['password'].strip()	
+			if form.is_valid():
+				selectedCardSet = form.save(commit=False)
+				if not(visibleTo == "pw" and password == ""):
+					selectedCardSet.user = request.user
+					selectedCardSet.visibleTo = visibleTo
+					selectedCardSet.password = password
+					selectedCardSet.save()
+					cardset_id = selectedCardSet.pk
+					message = "Card Set successfully created."
+					#return redirect('/dashboard/' + str(cardSet.id))
+				else:
+					message = "Password is required."
+			else:
+				print form.errors
+		else:
+			form = CardSetForm(instance=selectedCardSet)
+	elif option == "delete":
+		message = selectedCardSet.name + " deleted."
+		selectedCardSet.delete()
+		option, cardset_id = "0", "0"
+		selectedCardSet, questionList = None, None
+		return HttpResponseRedirect('/dashboard/0/0')
+		
+	context_dict = {'cardSetList': cardSetList, 'questionList': questionList,
+					'selectedCardSet': selectedCardSet, 'message': message, 'form': form,
+					'cardset_id': cardset_id, 'option': option}
+	return render_to_response('flash/dashboard.html', context_dict, context)
 
-@login_required
-def cardSetView(request):
-	context = RequestContext(request)
-
-	user = User.objects.get(username=request.user)
-	cardSetList = CardSet.objects.filter(user=user)	
-
-	if request.method == 'POST':
-		deleteList = request.POST.getlist('delete')
-		for cardSetId in deleteList:
-			cardSet = CardSet.objects.get(pk=cardSetId) 
-			cardSet.delete()
-
-	return render_to_response('flash/cardSetView.html',
-							 {'cardSetList': cardSetList},
-							 context)
 
 
 ###################  Test  #################################
@@ -247,9 +230,9 @@ def cardSetView(request):
 @login_required
 def test(request, test_id, cardset_id, question_id, option=None):
 	context = RequestContext(request)
-	message, answerBack, disabled, log, checked = "", "", "", "", ["","","","",""]
-	user = User.objects.get(username=request.user)
-
+	message, answerBack, disabled, questionCount, incorrects = "", "", "", "", ""
+	checked = ["","","","",""]
+	user = request.user
 	if request.method == 'POST':
 		question = Question.objects.get(pk=question_id)
 		if question.questionType == SHORT_ANSWER:
@@ -272,7 +255,6 @@ def test(request, test_id, cardset_id, question_id, option=None):
 			if len(answerBackList) != len(answerList):
 				correct = False
 			message = "Correct!" if correct == True else "Try again!"
-
 	else: #GET
 		if option == "1": #View answer
 			print "View answer called"
@@ -302,7 +284,6 @@ def test(request, test_id, cardset_id, question_id, option=None):
 			nextTest.questions.add(question)
 			#Disable the submission button so user can't select it anymore.
 			disabled = "disabled" 
-
 		elif option == "2": #Next question
 			print "Next question called"
 			question = Question.objects.get(pk=question_id)
@@ -366,16 +347,23 @@ def test(request, test_id, cardset_id, question_id, option=None):
 	else:
 		request.session['correct'] = 0
 		
+	
 	questionCount = Question.objects.filter(test=test_id).count()
-	nextTestQuestionCount = Question.objects.filter(test=nextTestId).count()
-	log = "%d question(s) left. %d incorrect(s)." % (questionCount, nextTestQuestionCount)
+	incorrects = Question.objects.filter(test=nextTestId).count()
 
 	context_dict = {'cardSetId': cardset_id,'testId': test_id, 'question': question,
 		 			'message': message, 'answerBack': answerBack, 'checked': checked,
-		 			'disabled': disabled, 'nextQuestion': nextQuestion, 'log': log}
+		 			'disabled': disabled, 'nextQuestion': nextQuestion,
+		 			'questionCount': questionCount, 'incorrects': incorrects}
 	return render_to_response('flash/test.html', context_dict, context)
 
 
+################## Helper function for create and edit card set #############
+
+
+
+
+################## Helper functions for test #####################
 
 def findAnswerForSA(question):
 	if question.choice1 != "":

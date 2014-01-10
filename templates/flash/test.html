@@ -1,81 +1,117 @@
 {% extends "flash/base.html" %}
 
-{% block title %}
-<p>Test</p>
+{% load static %}
+{% block css %}
+<link href="{% static 'css/test.css'%} " rel="stylesheet">
 {% endblock %}
 
 {% block body %}
 
-<hr>
+<div class="container">
+    <div class="col-xs-12 col-sm-9 question-area">
+			<form method="post" action="/test/{{ testId }}/{{ cardSetId }}/{{ question.pk }}/">
+				{% csrf_token %}
+					<h4 class="question">{{ question.question }}</h4>
 
-<form method="post" action="/test/{{ testId }}/{{ cardSetId }}/{{ question.pk }}/">
-	{% csrf_token %}
-	<h4>{{ question.question }}</h4>
+					{% if question.questionType == "Short answer" %}
+						<p><input type="text" name="answer" value="{{ answerBack }}" size="50" /></p>
 
-	{% if question.questionType == "Short answer" %}
-		<p><input type="text" name="answer" value="{{ answerBack }}" size="50" /></p>
+					{% elif question.questionType == "Multiple choice" %}
+						{% if question.choice1 != "" %}
+							<div class="radio">
+							  <label><input type="radio" name="answer" value="1" checked >
+							    {{ question.choice1 }}</label>
+							</div>
+						{% endif %}
+						{% if question.choice2 != "" %}
+							<div class="radio">
+							  <label><input type="radio" name="answer" value="2" {{ checked.1 }} >
+							    {{ question.choice2 }}</label>
+							</div>
+						{% endif %}
+						{% if question.choice3 != "" %}
+							<div class="radio">
+							  <label><input type="radio" name="answer" value="3" {{ checked.2 }} >
+							    {{ question.choice3 }}</label>
+							</div>
+						{% endif %}
+						{% if question.choice4 != "" %}
+							<div class="radio">
+							  <label><input type="radio" name="answer" value="4" {{ checked.3 }} >
+							    {{ question.choice4 }}</label>
+							</div>
+						{% endif %}
+						{% if question.choice5 != "" %}
+							<div class="radio">
+							  <label><input type="radio" name="answer" value="5" {{ checked.4 }} >
+							    {{ question.choice5 }}</label>
+							</div>
+						{% endif %}
 
-	{% elif question.questionType == "Multiple choice" %}
-		<ul>
-		{% if question.choice1 != "" %}
-			<li><input type="radio" name="answer" value="1" checked="" >
-			{{ question.choice1 }}</li>
-		{% endif %}
-		{% if question.choice2 != "" %}
-			<li><input type="radio" name="answer" value="2" {{ checked.1 }} >
-			{{ question.choice2 }}</li>
-		{% endif %}
-		{% if question.choice3 != "" %}
-			<li><input type="radio" name="answer" value="3" {{ checked.2 }} >
-			{{ question.choice3 }}</li>
-		{% endif %}
-		{% if question.choice4 != "" %}
-			<li><input type="radio" name="answer" value="4" {{ checked.3 }} >
-			{{ question.choice4 }}</li>
-		{% endif %}
-		{% if question.choice5 != "" %}
-			<li><input type="radio" name="answer" value="5" {{ checked.4 }} >
-			{{ question.choice5 }}</li>
-		{% endif %}
-		</ul>
+					{% elif question.questionType == "All that apply" %}
+						{% if question.choice1 != "" %}
+							<div class="checkbox">
+							  <label><input type="checkbox" name="answer" value="1" {{ checked.0 }} >
+							    {{ question.choice1 }}</label>
+							</div>
+						{% endif %}
+						{% if question.choice2 != "" %}
+							<div class="checkbox">
+							  <label><input type="checkbox" name="answer" value="2" {{ checked.1 }} >
+							    {{ question.choice2 }}</label>
+							</div>
+						{% endif %}
+						{% if question.choice3 != "" %}
+							<div class="checkbox">
+							  <label><input type="checkbox" name="answer" value="3" {{ checked.2 }} >
+							    {{ question.choice3 }}</label>
+							</div>
+						{% endif %}
+						{% if question.choice4 != "" %}
+							<div class="checkbox">
+							  <label><input type="checkbox" name="answer" value="4" {{ checked.3 }} >
+							    {{ question.choice4 }}</label>
+							</div>
+						{% endif %}
+						{% if question.choice5 != "" %}
+							<div class="checkbox">
+							  <label><input type="checkbox" name="answer" value="5" {{ checked.4 }} >
+							    {{ question.choice5 }}</label>
+							</div>
+						{% endif %}
+					{% endif %} <!-- All that apply -->
 
-	{% elif question.questionType == "All that apply" %}
-		<ul>
-		{% if question.choice1 != "" %}
-			<li><input type="checkbox" name="answer" value="1" {{ checked.0 }} >
-			{{ question.choice1 }}</li>
-		{% endif %}
-		{% if question.choice2 != "" %}
-			<li><input type="checkbox" name="answer" value="2" {{ checked.1 }} >
-			{{ question.choice2 }}</li>
-		{% endif %}
-		{% if question.choice3 != "" %}
-			<li><input type="checkbox" name="answer" value="3" {{ checked.2 }} >
-			{{ question.choice3 }}</li>
-		{% endif %}
-		{% if question.choice4 != "" %}
-			<li><input type="checkbox" name="answer" value="4" {{ checked.3 }} >
-			{{ question.choice4 }}</li>
-		{% endif %}
-		{% if question.choice5 != "" %}
-			<li><input type="checkbox" name="answer" value="5" {{ checked.4 }} >
-			{{ question.choice5 }}</li>
-		{% endif %}
-		</ul>
-	{% endif %}
-<!-- 	<input type="hidden" name="questionId" value="{{ question.pk }}"> -->
-	<input type="submit" name="submit" value="Submit" {{ disabled }}/>
-	{% if message != "Correct!" %}
-	<a href="/test/{{ testId }}/{{ cardSetId }}/{{ question.pk }}/1">View Answer</a>
-	{% endif %}
-	{% if nextQuestion == 1 %}
-	<a href="/test/{{ testId }}/{{ cardSetId }}/{{ question.pk }}/2">Next Question</a>
-	{% else %}
-	<a href="/test/0/{{ cardSetId }}/0/">Start Over</a>
-	{% endif %}
-</form>
 
-<p>{{ message }}</p>
-<p>{{ log }}</p>
+    </div><!--/span-->
+		<div class="col-xs-6 col-sm-3 question-bar">
+				<ul class="list-group">
+	  			<li class="list-group-item">Questions <span class="badge">
+	  			{{ questionCount }}</span></li>
+	  			<li class="list-group-item">Incorrects <span class="badge">
+	  			{{ incorrects }}</span></li>
+	  		</ul>
+				{% if message == "Correct!" %}
+				<h4 class="alert alert-success">Correct!</h4>
+				{% elif message == "Try again!" %}
+				<h4 class="alert alert-danger">Try again!</h4>
+				{% endif %}
+				<div class="question-btn">
+					<button class="btn btn-lg btn-primary btn-block" data-loading-text="Loading..." 
+									type="submit" {{ disabled }}>Submit</button>
+					{% if message != "Correct!" %}
+					<a class="btn btn-warning btn-lg btn-block" href="/test/{{ testId }}/{{ cardSetId }}/{{ question.pk }}/1" role="button">View Answer</a>
+					{% else %}
+					<a class="btn btn-warning btn-lg btn-block" href="/test/{{ testId }}/{{ cardSetId }}/{{ question.pk }}/1" role="button" disabled>View Answer</a>
+					{% endif %}
+					{% if nextQuestion == 1 %}
+					<a class="btn btn-default btn-lg btn-block" href="/test/{{ testId }}/{{ cardSetId }}/{{ question.pk }}/2" role="button">Next Question &raquo;</a>
+					{% else %}
+					<a class="btn btn-default btn-lg btn-block" href="/test/0/{{ cardSetId }}/0/" role="button">
+						Start Over</a>
+					{% endif %}
+				</div>
+			</form>
+    </div><!--/span-->
+</div><!--/.container-->
 
 {% endblock %}

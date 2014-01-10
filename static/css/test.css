@@ -1,0 +1,19 @@
+.alert {
+	text-align: center;
+}
+
+.question-area {
+	border: 1px #cccccc solid;
+	border-radius: 6px;
+	padding: 30px;
+	margin-bottom: 20px;
+	min-height: 250px;
+}
+
+.question {
+	margin-bottom: 15px;
+}
+
+.question-bar{
+	min-height: 320px;
+}

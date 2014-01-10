@@ -1,10 +1,17 @@
 {% extends 'flash/base.html' %}
 
-{% block title %}Add a Question{% endblock %}
+{% load static %}
+{% block css %}
+<link href="{% static 'css/signin.css'%} " rel="stylesheet">
+<link href="{% static 'css/questionform.css'%} " rel="stylesheet">
+{% endblock %}
 
 {% block body %}
-  <div class="">
-    <form id="category_form" method="post" action="/add_question/{{ cardset_id }}">
+  <div class="container">
+    <div class="form-signin">
+
+    <form id="category_form" method="post" action="/add_question/{{ cardset_id }}/">
+      <h2 class="form-signin-heading">Create a question</h2>
         <p>{{ message }}</p>
         <p>{{ questionType }}</p>
 
@@ -14,19 +21,33 @@
   		<p>{{ questionForm.question.help_text }}</p>
   		<p>{{ questionForm.question }}</p>
 
-      <br>
+      <br>        
 
-      <ul>
-        <li>{{ questionForm.isAnswer1 }}{{ questionForm.choice1 }}</li>
-        <li>{{ questionForm.isAnswer2 }}{{ questionForm.choice2 }}</li>
-        <li>{{ questionForm.isAnswer3 }}{{ questionForm.choice3 }}</li>
-        <li>{{ questionForm.isAnswer4 }}{{ questionForm.choice4 }}</li>
-        <li>{{ questionForm.isAnswer5 }}{{ questionForm.choice5 }}</li>
-      </ul>
-        
-      <br>
+      <div class="input-group">
+        <span class="input-group-addon">{{ questionForm.isAnswer1 }}</span>
+          {{ questionForm.choice1 }}
+      </div>
+      <div class="input-group">
+        <span class="input-group-addon">{{ questionForm.isAnswer2 }}</span>
+          {{ questionForm.choice2 }}
+      </div>
+      <div class="input-group">
+        <span class="input-group-addon">{{ questionForm.isAnswer3 }}</span>
+          {{ questionForm.choice3 }}
+      </div>
+      <div class="input-group">
+        <span class="input-group-addon">{{ questionForm.isAnswer4 }}</span>
+          {{ questionForm.choice4 }}
+      </div>
+      <div class="input-group">
+        <span class="input-group-addon">{{ questionForm.isAnswer5 }}</span>
+          {{ questionForm.choice5 }}
+      </div>
 
-    	<input type="submit" name="submit" value="Create Question" />
+      <br>
+      <button class="btn btn-lg btn-primary btn-block" data-loading-text="Loading..." type="submit">Submit</button>
+    	<!-- <input type="submit" name="submit" value="Create Question" /> -->
     </form>
-  </div>
+    </div>
+  </div> <!-- Container -->
 {% endblock %}

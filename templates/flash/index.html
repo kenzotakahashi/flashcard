@@ -1,12 +1,78 @@
 {% extends 'flash/base.html' %}
+{% load static %}
+{% block css %}
+<link href="{% static 'css/home.css'%} " rel="stylesheet">
+<style>
+	body {
+		background-color: {{ background }}
+	}
+</style>
+{% endblock %}
 
-{% block title %}Flash Card home{% endblock %}
+{% block home %}<li class="active">{% endblock %}
+
 {% block body %}
 
 {% if user.is_authenticated %}
-<h4 class="navbar-text">Welcome, {{ user.username }}!</h4>
+	{% for cardSet in cardSetList %}
+	<div class="container">
+	  <div class="row row-offcanvas row-offcanvas-right">
+	    <div class="col-xs-12 col-sm-8">
+				<ul class="list-group">
+				{% for question in questionList %}
+					<a class="list-group-item">{{ question.question }}</a>
+				{% endfor %}
+				</ul>
+	    </div><!--/span-->
+
+	    <div class="col-xs-6 col-sm-4 sidebar-offcanvas" id="sidebar" role="navigation">
+				<ul class="list-group">
+				{% for cardSet in cardSetList %}
+					{% if cardSet.pk == selectedCardSet.pk %}
+				  	<a href="/dashboard/{{ cardSet.id }}/0/" class="list-group-item active">
+				  {% else %}
+				  	<a href="/dashboard/{{ cardSet.id }}/0/" class="list-group-item">
+				  {% endif %}
+				  <span class="badge">{{ cardSet.numberOfQuestions }}</span>
+					<h4 class="list-group-item-heading">{{ cardSet }}
+
+					</h4>
+					<p class="list-group-item-text">{{ cardSet.user }} {{ cardSet.created }}</p>
+				  </a>
+				{% endfor %}
+				</ul>
+	    </div><!--/span-->
+	  </div><!--/row-->
+	</div><!--/.container-->
+
+
+{% endfor %}
 {% else %}
-<h4>Welcome!</h4>
+<div class="jumbotron">
+  <h1>Flash Card</h1>
+  <p class="lead">Fast, easy, and powerful flash card app for busy students.</p>
+  <p><a class="btn btn-lg btn-success" href="/register/" role="button">Get started today &raquo;</a></p>
+</div>
+
 {% endif %}
 
 {% endblock %}
+<br>
+<li><a href="/admin/">Admin</a></li>
+
+
+
+
+
+
+
+<!-- 
+<div class="list-group">
+  <a href="#" class="list-group-item active">
+    <h4 class="list-group-item-heading">List group item heading</h4>
+    <p class="list-group-item-text">...</p>
+  </a>
+</div>
+<p>{{ cardSet.name }} ({{ cardSet.questions_set.count }} questions) <br>
+	{{ cardSet.user }} {{ cardSet.created }}</p> -->
+
