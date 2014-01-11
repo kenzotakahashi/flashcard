@@ -2,77 +2,130 @@
 {% load static %}
 {% block css %}
 <link href="{% static 'css/home.css'%} " rel="stylesheet">
+<link href="{% static 'css/carousel.css'%} " rel="stylesheet">
 <style>
-	body {
+/*	body {
 		background-color: {{ background }}
-	}
+	}*/
 </style>
 {% endblock %}
 
 {% block home %}<li class="active">{% endblock %}
 
 {% block body %}
-
-{% if user.is_authenticated %}
-	{% for cardSet in cardSetList %}
-	<div class="container">
-	  <div class="row row-offcanvas row-offcanvas-right">
-	    <div class="col-xs-12 col-sm-8">
-				<ul class="list-group">
-				{% for question in questionList %}
-					<a class="list-group-item">{{ question.question }}</a>
-				{% endfor %}
-				</ul>
-	    </div><!--/span-->
-
-	    <div class="col-xs-6 col-sm-4 sidebar-offcanvas" id="sidebar" role="navigation">
-				<ul class="list-group">
-				{% for cardSet in cardSetList %}
-					{% if cardSet.pk == selectedCardSet.pk %}
-				  	<a href="/dashboard/{{ cardSet.id }}/0/" class="list-group-item active">
-				  {% else %}
-				  	<a href="/dashboard/{{ cardSet.id }}/0/" class="list-group-item">
-				  {% endif %}
-				  <span class="badge">{{ cardSet.numberOfQuestions }}</span>
-					<h4 class="list-group-item-heading">{{ cardSet }}
-
-					</h4>
-					<p class="list-group-item-text">{{ cardSet.user }} {{ cardSet.created }}</p>
-				  </a>
-				{% endfor %}
-				</ul>
-	    </div><!--/span-->
-	  </div><!--/row-->
-	</div><!--/.container-->
-
-
-{% endfor %}
-{% else %}
 <div class="jumbotron">
-  <h1>Flash Card</h1>
-  <p class="lead">Fast, easy, and powerful flash card app for busy students.</p>
+  <h1>Flashcard</h1>
+  <p class="lead">Fast, easy, and powerful user-driven quiz app 
+  for busy students.</p>
   <p><a class="btn btn-lg btn-success" href="/register/" role="button">Get started today &raquo;</a></p>
+
+  <p class="instruction">Here is a quick guide to help you get started with Flashcard.</p>
+ <!--  <button type="button" class="btn btn-default btn-lg">
+  	<span class="glyphicon glyphicon-chevron-down"></span>
+  </button>   -->
 </div>
 
-{% endif %}
+<div class="container marketing block">
+  <div class="row featurette row1">
+    <div class="col-md-7">
+      <h2 class="featurette-heading"><span class="text-muted">Step 1 </span><span class="white">Create new Card set.</span></h2>
+      <br>
+      <p class="lead">Card set is a container for the questions you create. Organize card set for each class, exam, or however you like. You can make your cardset public, or set a password and share it with your classmates.</p>
+    </div>
+    <div class="col-md-5">
+      <img class="img-thumbnail img-responsive" src="{% static "img/createCardSet.png" %}" alt="Generic placeholder image">
+    </div>
+  </div>
+</div>
+<div class="container marketing block">
+  <div class="row featurette row2">
+    <div class="col-md-5">
+      <img class="img-thumbnail img-responsive" src="{% static "img/createQuestion.png" %}" alt="Generic placeholder image">
+    </div>
+    <div class="col-md-7">
+      <h2 class="featurette-heading"><span class="text-muted">Step 2 </span>Create questions.</h2>
+      <br>
+      <p class="lead">Now it is time to create questions for your study. Want to study history, social science, or foreign language? No problem. Flashcard suppors short answer and multiple choice. See the bottom of the page for more information.</p>
+      <p class="lead">We might also support image, matching question, math equations, and voice sound in the future. Tell us what features you want.</p>
+    </div>
+  </div>
+</div>
+<div class="container marketing block">
+  <div class="row featurette row3">
+    <div class="col-md-7">
+      <h2 class="featurette-heading"><span class="text-muted">Step 3 </span>Test your Card set</h2>
+      <br>
+      <p class="lead">Here is the fun part. Flashcard randomly selects a question from the cardset to prevent from memorizing the sequence of questions. If you get it wrong, it will not show you the answer so you can answer as many times as you want.</p> 
+      <p class="lead">If you view the answer or skip to the next question, it will be stored in a different stack. After you finish all the questions in the card set, incorrected questions will be waiting for another try.</p>
+    </div>
+    <div class="col-md-5">
+      <img class="img-thumbnail img-responsive" src="{% static "img/test.png" %}" alt="Generic placeholder image">
+    </div>
+  </div>
+</div>
+
+  <!-- /END THE FEATURETTES -->
+
+<div class="container marketing block questiontype">
+  <div class="row row4">
+  	<h2 class="featurette-heading center-header">3 types of questions in one form</h2>
+  	<p class="lead center-lead">Flashcard has only one question submission form that will create 3 types of questions dynamically based on user input. Here is how it works.</p>
+    <div class="col-sm-4">
+    	<img src="{% static "img/shortAnswer.png" %}" alt="short answer" class="img-thumbnail">
+      <h2 class="white">Short Answer</h2>
+      <p class="lead">Just type the answer in any one of choice boxes. You don't have to check any buttons. A text input will appear on a test.</p>
+    </div><!-- /.col-lg-4 -->
+    <div class="col-sm-4">
+      <img src="{% static "img/multiple.png" %}" alt="multiple" class="img-thumbnail">
+      <h2 class="white">Multiple Choice</h2>
+      <p class="lead">Fill out more than one question and check the box next to the answer. Of course you can create True/False questions in this way. Like short answers, you can use any boxes. The choices will appear along with the radio buttons on a test</p>
+    </div><!-- /.col-lg-4 -->
+    <div class="col-sm-4">
+			<img src="{% static "img/allThatApply.png" %}" alt="all taht apply" class="img-thumbnail">
+      <h2 class="white">All That Apply</h2>
+      <p class="lead">If you fill out more than one question, and check more than one button or none of the buttons, this will be an "all that apply" question. The choices will appear along with the checkboxses on a test.</p>
+    </div><!-- /.col-lg-4 -->
+  </div><!-- /.row -->
+</div><!-- /.container -->
+
+<!-- ##################  Not used for now ############################-->
 
 {% endblock %}
 <br>
 <li><a href="/admin/">Admin</a></li>
 
+{% if user.is_authenticated %}
+	{% for cardSet in cardSetList %}
+	<div class="container">
+    <div class="col-xs-12 col-sm-8">
+			<ul class="list-group">
+			{% for question in questionList %}
+				<a class="list-group-item">{{ question.question }}</a>
+			{% endfor %}
+			</ul>
+    </div><!--/span-->
+
+    <div class="col-xs-6 col-sm-4 sidebar-offcanvas" id="sidebar" role="navigation">
+			<ul class="list-group">
+			{% for cardSet in cardSetList %}
+				{% if cardSet.pk == selectedCardSet.pk %}
+			  	<a href="/dashboard/{{ cardSet.id }}/0/" class="list-group-item active">
+			  {% else %}
+			  	<a href="/dashboard/{{ cardSet.id }}/0/" class="list-group-item">
+			  {% endif %}
+			  <span class="badge">{{ cardSet.numberOfQuestions }}</span>
+				<h4 class="list-group-item-heading">{{ cardSet }}
+
+				</h4>
+				<p class="list-group-item-text">{{ cardSet.user }} {{ cardSet.created }}</p>
+			  </a>
+			{% endfor %}
+			</ul>
+    </div><!--/span-->
+	</div><!--/.container-->
+
+{% endfor %}
+{% endif %}
 
 
-
-
-
-
-<!-- 
-<div class="list-group">
-  <a href="#" class="list-group-item active">
-    <h4 class="list-group-item-heading">List group item heading</h4>
-    <p class="list-group-item-text">...</p>
-  </a>
-</div>
-<p>{{ cardSet.name }} ({{ cardSet.questions_set.count }} questions) <br>
-	{{ cardSet.user }} {{ cardSet.created }}</p> -->
-
+  

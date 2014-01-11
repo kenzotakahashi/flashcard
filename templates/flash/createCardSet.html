@@ -1,0 +1,44 @@
+{% extends 'flash/base.html' %}
+
+{% load static %}
+{% block css %}
+<link href="{% static 'css/signin.css'%} " rel="stylesheet">
+<link href="{% static 'css/formstyle.css'%} " rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+
+<div class="container">
+  <form class="form-signin" method="post" action="/create_cardset/" role="form">
+    {% csrf_token %}
+    <h2 class="form-signin-heading">Create new card set</h2>
+    <p>{{ message }}</p>
+    <h5>Card set name</h5>
+      {{ form.name }}
+    <h5>Visible to</5>
+  
+    <select class="form-control selectbox visibleTo" name="visibleTo">
+      <option value="me">just me</option>
+      <option value="eo">everyone</option>
+      <option value="pw">people with a password...</option>         
+    </select>
+    <h5 class="optionPass">Password (only required for restricted use)</h5>
+    <input type="text" class="form-control optionPass" name="password" placeholder="Password">
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Create</button>
+  </form>
+</div> <!--Container -->
+
+<br><br><br><br><br><br><br><br><br><br><br><br>
+{% endblock %}
+{% block js %}
+<!-- <script src="{% static 'js/flashcard.js' %}"></script> -->
+{% endblock %}
+
+
+  <p>{{ message }}</p>
+  {% csrf_token %}
+  <p>{{ form.name.errors }}</p>
+  <p>{{ form.name.help_text }}</p>
+  <p>{{ form.name }}</p>
+  <p>Visible to:</p>
+  <p>{{ form.visibleTo }}

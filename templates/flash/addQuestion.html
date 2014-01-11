@@ -11,18 +11,18 @@
     <div class="form-signin">
 
     <form id="category_form" method="post" action="/add_question/{{ cardset_id }}/">
-      <h2 class="form-signin-heading">Create a question</h2>
+      <h2 class="form-signin-heading">Create new question</h2>
         <p>{{ message }}</p>
         <p>{{ questionType }}</p>
 
       	{% csrf_token %}
       
+      <h5>Question</h5>
   		<p>{{ questionForm.question.errors }}</p>
   		<p>{{ questionForm.question.help_text }}</p>
   		<p>{{ questionForm.question }}</p>
 
-      <br>        
-
+      <h5>Choice and/or Answer</h5>
       <div class="input-group">
         <span class="input-group-addon">{{ questionForm.isAnswer1 }}</span>
           {{ questionForm.choice1 }}
@@ -44,10 +44,10 @@
           {{ questionForm.choice5 }}
       </div>
 
-      <br>
-      <button class="btn btn-lg btn-primary btn-block" data-loading-text="Loading..." type="submit">Submit</button>
+      <button class="btn btn-lg btn-primary btn-block" data-loading-text="Loading..." type="submit">Create</button>
     	<!-- <input type="submit" name="submit" value="Create Question" /> -->
     </form>
     </div>
   </div> <!-- Container -->
+<br><br><br><br><br><br><br><br><br><br><br><br>
 {% endblock %}

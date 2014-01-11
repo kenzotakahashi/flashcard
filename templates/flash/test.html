@@ -8,13 +8,13 @@
 {% block body %}
 
 <div class="container">
-    <div class="col-xs-12 col-sm-9 question-area">
+    <div class="col-xs-12 col-sm-8 question-area">
 			<form method="post" action="/test/{{ testId }}/{{ cardSetId }}/{{ question.pk }}/">
 				{% csrf_token %}
 					<h4 class="question">{{ question.question }}</h4>
 
 					{% if question.questionType == "Short answer" %}
-						<p><input type="text" name="answer" value="{{ answerBack }}" size="50" /></p>
+						<p><input type="text" name="answer" value="{{ answerBack }}" /></p>
 
 					{% elif question.questionType == "Multiple choice" %}
 						{% if question.choice1 != "" %}
@@ -83,7 +83,7 @@
 
 
     </div><!--/span-->
-		<div class="col-xs-6 col-sm-3 question-bar">
+		<div class="col-xs-12 col-sm-4 question-bar">
 				<ul class="list-group">
 	  			<li class="list-group-item">Questions <span class="badge">
 	  			{{ questionCount }}</span></li>
@@ -113,5 +113,5 @@
 			</form>
     </div><!--/span-->
 </div><!--/.container-->
-
+<br><br><br><br><br><br><br><br><br><br><br><br>
 {% endblock %}

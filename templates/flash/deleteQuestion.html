@@ -1,0 +1,18 @@
+{% extends 'flash/base.html' %}
+
+{% load static %}
+{% block css %}
+<link href="{% static 'css/signin.css'%} " rel="stylesheet">
+<link href="{% static 'css/formstyle.css'%} " rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+<div class="container">
+  <div class="form-signin">
+    <h4 class="alert alert-info">"Question deleted"</h4>
+    <a class="btn btn-primary btn-lg btn-block" href="/dashboard/0/" role="button">
+    Go back to dashboard</a> 
+  </div>
+</div>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+{% endblock %}

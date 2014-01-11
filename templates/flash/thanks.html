@@ -1,0 +1,16 @@
+{% extends 'flash/base.html' %}
+
+{% load static %}
+{% block css %}
+<link href="{% static 'css/signin.css'%} " rel="stylesheet">
+<link href="{% static 'css/formstyle.css'%} " rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+<div class="container">
+	<div class="form-signin">
+		<h4 class="alert alert-success">"Thanks for the email!"</h4>
+	</div>
+</div>
+<br><br><br><br><br><br><br><br><br><br><br><br>
+{% endblock %}

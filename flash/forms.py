@@ -49,3 +49,13 @@ class QuestionForm(forms.ModelForm):
 				attrs={'cols': 70, 'rows': 3, 'placeholder': 'Question', 
 				'class': 'form-control', 'autofocus': True }),
 		}
+
+class ContactForm(forms.Form):
+    subject = forms.CharField(max_length=100, widget=forms.TextInput(
+		attrs={'placeholder': 'Subject', 'class': 'form-control', 'autofocus': True }))
+    message = forms.CharField(widget=forms.Textarea(
+		attrs={'cols': 70, 'rows': 5, 'placeholder': 'message', 'class': 'form-control'}))
+    sender = forms.EmailField(widget=forms.TextInput
+		(attrs={'placeholder': 'Email address', 'class': 'form-control'}))
+    cc_myself = forms.BooleanField(required=False)
+

@@ -4,6 +4,7 @@
 {% block css %}
 <link href="{% static 'css/signin.css'%} " rel="stylesheet">
 <link href="{% static 'css/questionform.css'%} " rel="stylesheet">
+<link href="{% static 'css/formstyle.css'%} " rel="stylesheet">
 {% endblock %}
 
 {% block body %}
@@ -15,23 +16,12 @@
         <p>{{ questionType }}</p>
         {% csrf_token %}
 
-        <label>Move this question to:
-        <select class="form-control" name="cardSet">
-        <option value="{{ question.cardSet.name }}">{{ question.cardSet.name }}</option>
-        {% for cardSet in cardSetList %}
-        {% if cardSet.pk != question.cardSet.pk %}
-          <option value="{{ cardSet.name }}">{{ cardSet.name }}</option>
-        {% endif %}
-        {% endfor %}
-        </select></label>
-
-        
+        <h5>Question</h5>
         <p>{{ questionForm.question.errors }}</p>
         <p>{{ questionForm.question.help_text }}</p>
         <p>{{ questionForm.question }}</p>
 
-        <br>
-
+        <h5>Choice and/or Answer</h5>
         <div class="input-group">
           <span class="input-group-addon">{{ questionForm.isAnswer1 }}</span>
             {{ questionForm.choice1 }}
@@ -54,8 +44,37 @@
         </div>
 
         <br>
+        <h5>Move this question to:</h5>
+        <select class="form-control" name="cardSet">
+        <option value="{{ question.cardSet.name }}">{{ question.cardSet.name }}</option>
+        {% for cardSet in cardSetList %}
+        {% if cardSet.pk != question.cardSet.pk %}
+          <option value="{{ cardSet.name }}">{{ cardSet.name }}</option>
+        {% endif %}
+        {% endfor %}
+        </select>
+
         <button class="btn btn-lg btn-primary btn-block" data-loading-text="Loading..." type="submit">Submit</button>
+        <button class="btn btn-danger btn-lg btn-block" data-toggle="modal" data-target="#myModal">Delete
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-body">
+                <p>Are you sure you want to delete it?</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default dismiss" data-dismiss="modal">
+                Cancel</button>
+                <a class="btn btn-danger" href="/delete_question/{{ question.pk }}" role="button">Delete</a>
+              </div>
+            </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
       </form>
     </div>
   </div>
+<br><br><br><br><br><br>
 {% endblock %}

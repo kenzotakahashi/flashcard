@@ -1,0 +1,29 @@
+{% extends "flash/base.html" %}
+{% load static %}
+{% block css %}
+<link href="{% static 'css/signin.css'%} " rel="stylesheet">
+<link href="{% static 'css/questionform.css'%} " rel="stylesheet">
+{% endblock %}
+{% block contact %}<li class="active">{% endblock %}
+{% block body %}
+
+<div class="container">
+  <form class="form-signin" role="form" method="post" action="/contact/">
+    {% csrf_token %}
+    <h2 class="form-signin-heading">Contact us</h2>
+
+    <p class="form-signin">We are always seeking feedback to improve our product. Tell me about your experience with Flashcard.</p>
+    {{ form.erros }}
+    <h5>Subject</h5>
+    {{ form.subject }}
+    <h5>Email address</h5>
+    {{ form.sender }}
+    <h5>CC yourself?</h5>
+    {{ form.cc_myself }}
+    <h5>Your message</h5>
+    {{ form.message }}
+  	<button class="btn btn-lg btn-primary btn-block" data-loading-text="Loading..." type="submit">Submit</button>
+  </form>
+</div>
+<br><br><br><br>
+{% endblock %}

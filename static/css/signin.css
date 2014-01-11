@@ -39,6 +39,10 @@ body {
   border-top-right-radius: 0;
 }
 
+p .form-signin {
+  font-size: 18px;
+}
+
 .btn{
   margin-top: 20px;
   margin-bottom: 10px;
