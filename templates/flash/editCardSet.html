@@ -9,7 +9,7 @@
 {% block body %}
 
 <div class="container">
-  <form class="form-signin" method="post" action="/create_cardset/" role="form">
+  <form class="form-signin" method="post" action="/edit_cardset/{{ cardSet.pk }}/" role="form">
     {% csrf_token %}
     <h2 class="form-signin-heading">Edit card set</h2>
     <p>{{ message }}</p>

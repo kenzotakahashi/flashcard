@@ -16,4 +16,5 @@ urlpatterns = patterns('',
 	url(r'^delete_question/(?P<question_id>\d+)/$', views.deleteQuestion, name='deleteQuestion'),
 	url(r'^test/(?P<test_id>\d+)/(?P<cardset_id>\d+)/(?P<question_id>\d+)/(?P<option>\d?)$',
 	 	views.test, name='test'),
+	url(r'^example/$', views.example, name='example'),
 	)

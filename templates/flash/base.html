@@ -35,9 +35,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      {% block home %}<li>{% endblock %}<a class="navbar-brand" href="/">Flashcard</a></li>
+      <a class="navbar-brand" href="/">Flashcard</a>
     </div>
     <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        {% block home %}<li>{% endblock %}<a href="/">Home</a></li>
+      </ul>
       <ul class="nav navbar-nav">
         {% block contact %}<li>{% endblock %}<a href="/contact/">Contact</a></li>
       </ul>
@@ -66,7 +69,7 @@
     <div class="col-xs-6 col-sm-3">
       <p>Copyright &copy; 2014 Kenzo Takahashi</p>
     </div> 
-    <div class="col-xs-6 col-sm-2"> <!-- Facebook API -->
+    <div class="col-xs-6 col-sm-4"> <!-- Facebook API -->
       <div class="fb-like" data-href="http://kenzo.pythonanywhere.com/" data-layout="standard" data-action="like" data-show-faces="true" data-share="true"></div>
     </div>
     <div class="col-xs-6 col-sm-2"> <!-- LinkedIn API -->
@@ -75,11 +78,11 @@
     <a href="http://www.linkedin.com/pub/kenzo-takahashi/64/874/739">
       <img src="http://s.c.lnkd.licdn.com/scds/common/u/img/webpromo/btn_viewmy_120x33.png" width="120" height="33" border="0" alt="View kenzo takahashi's profile on LinkedIn"></a>
     </div>
-    <div class="col-xs-6 col-sm-2"> <!-- Twitter tweet API -->
+    <div class="col-xs-6 col-sm-3"> <!-- Twitter tweet API -->
       <a href="https://twitter.com/share" class="twitter-share-button" data-via="twitterapi" data-lang="en">Tweet</a>
       <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>      
-    </div>
-    <div class="col-xs-6 col-sm-3"> <!-- Twitter follow API -->
+<!--     </div>
+    <div class="col-xs-6 col-sm-3"> --> <!-- Twitter follow API -->
       <a href="https://twitter.com/kenzotakahashi" class="twitter-follow-button" data-show-count="false" data-lang="en">Follow @kenzotakahashi</a>
       <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
     </div>

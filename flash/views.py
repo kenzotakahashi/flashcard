@@ -6,8 +6,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.mail import send_mail, BadHeaderError
 
-from random import randint
-
 from flash.models import CardSet, Question, Test
 from flash.forms import UserForm, CardSetForm, QuestionForm, ContactForm
 
@@ -16,16 +14,15 @@ MULTIPLE_CHOICE = 'Multiple choice'
 ALL_THAT_APPLY = 'All that apply'
 
 def index(request, cardset_id=0):
-	print "Print working"
-	backgroundList = ["#4CE59C", "#628DDA", "#32C50E", "#EA60F0", "#E75223", "#F0EA60",
-					"#60CDF0", "#FDFD00", "#FD0047", "#039E8B"]
-	background = backgroundList[randint(0, len(backgroundList) -1)]
-
 	context = RequestContext(request)
 	cardSetList = CardSet.objects.order_by('-created')[:20]
 
-	context_dict = {'cardSetList': cardSetList, 'background': background }
+	context_dict = {'cardSetList': cardSetList}
 	return render_to_response('flash/index.html', context_dict, context)
+
+def example(request):
+	context = RequestContext(request)
+	return render_to_response('flash/example.html', context)
 
 #################### Contact ###########################
 
